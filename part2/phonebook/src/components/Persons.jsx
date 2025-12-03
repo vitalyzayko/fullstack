@@ -1,6 +1,7 @@
 import ShowPerson from "./ShowPerson"
 
-const Persons = ({persons, filterInput}) => {
+
+const Persons = ({persons, filterInput, personToDelete}) => {
 
     const checkInputInPersonsList = (person, input) => {
     const nameLower = person.name.toLowerCase()
@@ -11,11 +12,12 @@ const Persons = ({persons, filterInput}) => {
 
   const filteredList = persons.filter((person) => checkInputInPersonsList(person, filterInput))
     
-
-    return (
+  return (
         <div>
-          {filteredList.map(person => 
-            <ShowPerson key={person.id} name={person.name} number={person.number}/>
+          {filteredList.map(person => {
+            return (
+              <ShowPerson key={person.id} person={person} personToDelete={personToDelete}/>
+            )}
           )}
         </div>
     )

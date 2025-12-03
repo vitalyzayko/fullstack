@@ -1,10 +1,8 @@
 import {useState, useEffect} from 'react'
-import axios from "axios"
 import Persons from './components/Persons'
 import Form from './components/Form'
 import Filter from './components/Filter'
-
-
+import personsService from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,10 +10,71 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [filterInput, setFilterInput] = useState("")
 
+
+  const personToDelete = id => {
+      
+    (window.confirm("Do you want to delete the person?") === true) 
+      ? (
+        personsService
+        .del(id)
+        .then(result => {
+          console.log("result.data:", result)
+          setPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+            console.log("error:", error )
+        })
+      ) 
+      : 
+        {}
+       
+          
+  }
+
+  const addPerson = (event) => {
+    event.preventDefault()
+    
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    }
+    
+    //let findResults = undefined
+    let findResults = persons.find((person) => person.name === newPerson.name) 
+    //console.log("newName found in persons?: ", findResults === undefined)
+
+    if (findResults === undefined) 
+      {
+        personsService
+          .create(newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+          })
+        console.log({newName}, "will be added to the phonebook")
+      } 
+    else 
+    {  
+      const updatedPerson = {...findResults, number: newNumber}
+      console.log(newName, "already exists in the phonebook. Do you want his number to be replaced")
+        
+      if (window.confirm(`${newName} already exists in the phonebook. Do you want his number to be replaced`) === true) {
+        personsService
+          .update(updatedPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.map(person => person.id === returnedPerson.id ? updatedPerson : person))
+          })
+      } 
+    }
+    
+    setNewNumber("")
+    setNewName("")
+  }
+
+
   const handleFilterInput = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setFilterInput(event.target.value)
-    console.log("setting Filter Input:", filterInput) 
+    //console.log("setting Filter Input:", filterInput) 
   }
 
   const handleNameAdd = (event) => {
@@ -29,26 +88,24 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personsService
+      .getAll()
+      .then(initialList => {
+        setPersons(initialList)
       })
-    }, [])
+  },[])
 
+  
   return (
     <div>
       <h2>Phonebook:</h2>
       <Filter value={filterInput} onChange={handleFilterInput}/>
       <h3>Add a new:</h3>  
-      <Form persons={persons} setPersons={setPersons} newName={newName} 
+      <Form addPerson={addPerson} newName={newName} 
             newNumber={newNumber} handleNameAdd={handleNameAdd} 
-            handleNumberAdd={handleNumberAdd} setNewName={setNewName} 
-            setNewNumber={setNewNumber}/>
+            handleNumberAdd={handleNumberAdd}/>
       <h3>Numbers</h3>
-      <Persons persons={persons} filterInput={filterInput}/>
+      <Persons persons={persons} filterInput={filterInput} personToDelete={personToDelete} />
     </div>
   )
 }
