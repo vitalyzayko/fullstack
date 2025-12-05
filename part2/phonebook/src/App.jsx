@@ -3,12 +3,15 @@ import Persons from './components/Persons'
 import Form from './components/Form'
 import Filter from './components/Filter'
 import personsService from "./services/persons"
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [filterInput, setFilterInput] = useState("")
+  const [errorMessage, setErrorMessage] = useState([null, 0])
 
 
   const personToDelete = id => {
@@ -22,7 +25,12 @@ const App = () => {
           setPersons(persons.filter(p => p.id !== id))
         })
         .catch(error => {
-            console.log("error:", error )
+          //console.log("Error Deleting", error )
+          setErrorMessage([`Information about person with id="${id}" has been already deleted`, 0])
+            setTimeout(() => {
+              setErrorMessage([null, 0])
+            }, 5000)  
+          
         })
       ) 
       : 
@@ -49,19 +57,35 @@ const App = () => {
           .create(newPerson)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
+            setErrorMessage([`Person "${newPerson.name}" has been sucessfully added`, 1])
+            setTimeout(() => {
+              setErrorMessage([null, 0])
+            }, 5000)
           })
         console.log({newName}, "will be added to the phonebook")
       } 
     else 
     {  
       const updatedPerson = {...findResults, number: newNumber}
-      console.log(newName, "already exists in the phonebook. Do you want his number to be replaced")
+      //console.log(newName, "already exists in the phonebook. Do you want his number to be replaced")
         
       if (window.confirm(`${newName} already exists in the phonebook. Do you want his number to be replaced`) === true) {
         personsService
           .update(updatedPerson.id, updatedPerson)
           .then((returnedPerson) => {
             setPersons(persons.map(person => person.id === returnedPerson.id ? updatedPerson : person))
+            setErrorMessage([`Phone number of "${updatedPerson.name}" has been sucessfully changed`, 1])
+            setTimeout(() => {
+              setErrorMessage([null, 0])
+            }, 5000)
+          
+          })
+          .catch(error => {
+            setErrorMessage([`Information about "${updatedPerson.name}" has been already deleted`, 0])
+            setTimeout(() => {
+              setErrorMessage([null, 0])
+            }, 5000)
+            //console.log("in catch part")
           })
       } 
     }
@@ -98,6 +122,7 @@ const App = () => {
   
   return (
     <div>
+      <Notification message={errorMessage}/>
       <h2>Phonebook:</h2>
       <Filter value={filterInput} onChange={handleFilterInput}/>
       <h3>Add a new:</h3>  

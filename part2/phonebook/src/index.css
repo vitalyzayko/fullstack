@@ -1,0 +1,44 @@
+h1 {
+    color: rgb(25, 207, 43);
+    font-style: italic;
+}
+
+.note {
+    color: rgb(25, 103, 207);
+    font-size: 20px;
+}
+
+.success {
+    color: rgb(204, 255, 0);
+    background: rgb(13, 121, 58);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: rgb(204, 255, 0);
+    background: rgb(255, 8, 0);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: rgb(182, 206, 255);
+    color: rgb(39, 37, 37);
+    font-size: 14px;
+    padding: 3px 3px;
+    border: solid 2px rgb(0, 100, 0);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(0, 100, 0);
+    color: white;
+}
