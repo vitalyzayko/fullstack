@@ -1,0 +1,22 @@
+h2, h3 {
+    text-align: left;
+    color: #03519f;
+    font-family: 'Arial', sans-serif;
+}
+
+.flag {
+    max-width: 30%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.countryName {
+    font-weight: bold;
+    color: blueviolet;
+}
+
+.ListTitle {
+    font-weight: bold;
+    text-decoration: underline;
+}
