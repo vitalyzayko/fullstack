@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const morgan = require("morgan")
+
+
 
 app.use(express.json())
 
@@ -9,6 +12,19 @@ const requestTime = (request, response, next) => {
 }
 
 app.use(requestTime)
+
+
+morgan.token('body', (request, response) => 
+  { if (request.method == "POST") {
+    return body = JSON.stringify(request.body)
+    } 
+  })
+
+
+morgan.format("tinyBodyPost", ":method :url :status :res[content-length] - :response-time ms :body")
+
+app.use(morgan("tinyBodyPost"))
+
 
 let persons = [
   { id: "1", name: "Arto Hellas", number: "040-123456" },
