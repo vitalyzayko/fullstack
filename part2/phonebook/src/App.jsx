@@ -21,7 +21,7 @@ const App = () => {
         personsService
         .del(id)
         .then(result => {
-          console.log("result.data:", result)
+          //console.log("result.data:", result.data)
           setPersons(persons.filter(p => p.id !== id))
         })
         .catch(error => {
@@ -57,12 +57,13 @@ const App = () => {
           .create(newPerson)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
+            console.log({newName}, "will be added to the phonebook")
             setErrorMessage([`Person "${newPerson.name}" has been sucessfully added`, 1])
             setTimeout(() => {
               setErrorMessage([null, 0])
             }, 5000)
           })
-        console.log({newName}, "will be added to the phonebook")
+        
       } 
     else 
     {  
