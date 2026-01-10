@@ -57,38 +57,35 @@ const App = () => {
           .create(newPerson)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
-            console.log({newName}, "will be added to the phonebook")
-            setErrorMessage([`Person "${newPerson.name}" has been sucessfully added`, 1])
+            //console.log({returnedPerson}, "has been added to the phonebook")
+            setErrorMessage([`Person "${returnedPerson.name}" has been sucessfully added`, 1])
             setTimeout(() => {
               setErrorMessage([null, 0])
             }, 5000)
           })
         
-      } 
-    else 
-    {  
-      const updatedPerson = {...findResults, number: newNumber}
-      //console.log(newName, "already exists in the phonebook. Do you want his number to be replaced")
+      } else {  
+      
+        const updatedPerson = {...findResults, number: newNumber}
         
-      if (window.confirm(`${newName} already exists in the phonebook. Do you want his number to be replaced`) === true) {
-        personsService
-          .update(updatedPerson.id, updatedPerson)
-          .then((returnedPerson) => {
-            setPersons(persons.map(person => person.id === returnedPerson.id ? updatedPerson : person))
-            setErrorMessage([`Phone number of "${updatedPerson.name}" has been sucessfully changed`, 1])
-            setTimeout(() => {
-              setErrorMessage([null, 0])
-            }, 5000)
-          
-          })
-          .catch(error => {
-            setErrorMessage([`Information about "${updatedPerson.name}" has been already deleted`, 0])
-            setTimeout(() => {
-              setErrorMessage([null, 0])
-            }, 5000)
-            //console.log("in catch part")
-          })
-      } 
+        if (window.confirm(`${newName} already exists in the phonebook. Do you want his number to be replaced`) === true) {
+          personsService
+            .update(updatedPerson.id, updatedPerson)
+            .then((returnedPerson) => {
+              setPersons(persons.map(person => person.id === returnedPerson.id ? updatedPerson : person))
+              setErrorMessage([`Phone number of "${returnedPerson.name}" has been sucessfully changed`, 1])
+              setTimeout(() => {
+                setErrorMessage([null, 0])
+              }, 5000)
+            
+            })
+            .catch(error => {
+              setErrorMessage([`Information about "${updatedPerson.name}" has been already deleted`, 0])
+              setTimeout(() => {
+                setErrorMessage([null, 0])
+              }, 5000)
+            })
+        } 
     }
     
     setNewNumber("")
